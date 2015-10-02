@@ -35,17 +35,20 @@ APIs are modeled as scopes - you need to register all APIs that you want to be a
 ```csharp
 using IdentityServer3.Core.Models;
 
-static class Scopes
+namespace IdSrv
 {
-    public static List<Scope> Get()
+    static class Scopes
     {
-        return new List<Scope>
+        public static List<Scope> Get()
         {
-            new Scope
+            return new List<Scope>
             {
-                Name = "api1"
-            }
-        };
+                new Scope
+                {
+                    Name = "api1"
+                }
+            };
+        }
     }
 }
 ```
@@ -70,33 +73,36 @@ For this client we configure the following things:
 ```csharp
 using IdentityServer3.Core.Models;
 
-static class Clients
+namespace IdSrv
 {
-    public static List<Client> Get()
+    static class Clients
     {
-        return new List<Client>
+        public static List<Client> Get()
         {
-           // no human involved
-            new Client
+            return new List<Client>
             {
-                ClientName = "Silicon-only Client",
-                ClientId = "silicon",
-                Enabled = true,
-                AccessTokenType = AccessTokenType.Reference,
+                // no human involved
+                new Client
+                {
+                    ClientName = "Silicon-only Client",
+                    ClientId = "silicon",
+                    Enabled = true,
+                    AccessTokenType = AccessTokenType.Reference,
 
-                Flow = Flows.ClientCredentials,
+                    Flow = Flows.ClientCredentials,
                     
-                ClientSecrets = new List<Secret>
-                {
-                    new Secret("F621F470-9731-4A25-80EF-67A6F7C5F4B8".Sha256())
-                },
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret("F621F470-9731-4A25-80EF-67A6F7C5F4B8".Sha256())
+                    },
                     
-                AllowedScopes = new List<string>
-                {
-                    "api1"
+                    AllowedScopes = new List<string>
+                    {
+                        "api1"
+                    }
                 }
-            }
-        };
+            };
+        }
     }
 }
 ```
@@ -267,6 +273,8 @@ static void CallApi(TokenResponse response)
     Console.WriteLine(client.GetStringAsync("http://localhost:14869/test").Result);
 }
 ```
+
+Back in the web site project, make sure the "SSL Enabled" property is set to true.
 
 If you call both snippets, you should see `{"message":"OK computer","client":"silicon"}` in your console.
 
